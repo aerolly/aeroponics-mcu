@@ -1,10 +1,6 @@
 import os
 import glob
 import time
-
-# These tow lines mount the device:
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
  
 base_dir = '/sys/bus/w1/devices/'
 # Get all the filenames begin with 28 in the path base_dir.
@@ -22,7 +18,7 @@ def read_temp_raw():
     f.close()
     return lines
  
-def read_temp():
+def run():
     lines = read_temp_raw()
     # Analyze if the last 3 characters are 'YES'.
     while lines[0].strip()[-3:] != 'YES':
@@ -35,9 +31,9 @@ def read_temp():
         temp_string = lines[1][equals_pos+2:]
         temp_c = float(temp_string) / 1000.0
         temp_f = temp_c * 9.0 / 5.0 + 32.0
-        return temp_c, temp_f
+        return temp_f
  
-print(' rom: '+ read_rom())
-while True:
-    print(' C=%3.3f  F=%3.3f'% read_temp())
-time.sleep(1)
+# print(' rom: '+ read_rom())
+# while True:
+#     print(' C=%3.3f  F=%3.3f'% read_temp())
+# time.sleep(1)
