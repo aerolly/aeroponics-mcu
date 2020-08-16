@@ -83,8 +83,9 @@ if __name__ == "__main__":
     print("Shutdown requested...exiting")
   except Exception:
     traceback.print_exc(file=sys.stdout)
+  finally:
+    deinitializeHardware()
+    sys.exit(0)
 
-  deinitializeHardware()
-  sys.exit(0)
 # while True:
   
