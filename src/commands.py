@@ -13,6 +13,8 @@ class Command:
       self.handleDevice()
     elif (self.command == 'sensor'):
       self.handleSensor()
+    else:
+      print('Invalid command type provided.')
 
   # Control device
   def handleDevice(self):

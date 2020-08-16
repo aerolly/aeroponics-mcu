@@ -8,7 +8,12 @@ base_dir = '/sys/bus/w1/devices/'
 #     name_file=device_folder+'/name'
 #     f = open(name_file,'r')
 #     return f.readline()
- 
+
+def initializeTemperature():
+    # Temperature sensor mounting
+    os.system('modprobe w1-gpio')
+    os.system('modprobe w1-therm')
+
 def read_temp_raw():
     # Get all the filenames begin with 28 in the path base_dir.
     device_folder = glob.glob(base_dir + '28*')[0]
