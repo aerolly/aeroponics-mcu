@@ -1,13 +1,11 @@
-import RPi.GPIO as GPIO
-from dotenv import load_dotenv
+# import RPi.GPIO as GPIO
 import redis
 import os
 import time
 import threading
 import simplejson as json
 
-load_dotenv()
-
+import settings
 from commands import Command
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
@@ -38,7 +36,9 @@ def handleQueue():
       try:
         command = json.loads(scheduleQueue.pop(0))
 
-        c = Command(command.command, command.options)
+        print(f'Processing {command}')
+
+        c = Command(command['command'], command['options'])
 
         c.handleCommand()
       except json.JSONDecodeError as error:
@@ -52,12 +52,18 @@ def handleRedisSchedule():
     print('Could not subscribe')
 
   while True:
-    print('test out')
     for message in p.listen():
-      scheduleQueue.append(message)
+      try:
+        msg = message['data'].decode('utf-8')
+        scheduleQueue.append(msg)
+
+        print('Received event.')
+      except UnicodeError:
+        print('Error decoding Redis message')
     time.sleep(1)
 
 if __name__ == "__main__":
+  initializeHardware()
   queue = threading.Thread(target=handleQueue)
   redisPub = threading.Thread(target=handleRedisSchedule)
 
@@ -65,8 +71,8 @@ if __name__ == "__main__":
   queue.start()
   redisPub.start()  
 
-  print('Stopping scheduler')
   queue.join()
   redisPub.join()
+  print('Stopped scheduler')
 # while True:
   
