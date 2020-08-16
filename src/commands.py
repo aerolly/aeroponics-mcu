@@ -36,7 +36,8 @@ class Command:
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      mod.run()
+      reading = mod.run()
+      print(reading)
     except AttributeError:
       print(AttributeError)
   
