@@ -4,6 +4,8 @@ import os
 import time
 import threading
 import simplejson as json
+import sys
+import traceback
 
 import settings
 from commands import Command
@@ -64,16 +66,25 @@ def handleRedisSchedule():
     time.sleep(1)
 
 if __name__ == "__main__":
-  initializeHardware()
-  queue = threading.Thread(target=handleQueue)
-  redisPub = threading.Thread(target=handleRedisSchedule)
+  try:
+    initializeHardware()
+    queue = threading.Thread(target=handleQueue)
+    redisPub = threading.Thread(target=handleRedisSchedule)
 
-  print('Starting scheduler')
-  queue.start()
-  redisPub.start()  
+    print('Starting scheduler')
+    queue.start()
+    redisPub.start()  
 
-  queue.join()
-  redisPub.join()
-  print('Stopped scheduler')
+    queue.join()
+    redisPub.join()
+    print('Stopped scheduler')
+  except KeyboardInterrupt:
+
+    print("Shutdown requested...exiting")
+  except Exception:
+    traceback.print_exc(file=sys.stdout)
+
+  deinitializeHardware()
+  sys.exit(0)
 # while True:
   
