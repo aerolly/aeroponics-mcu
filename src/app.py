@@ -1,4 +1,4 @@
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import redis
 import os
 import time
@@ -20,7 +20,7 @@ def initializeGPIO():
 
   pins = [17, 27, 22]
   for pin in pins:
-    GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH) # off (negative logic)
 
 def initializeHardware():
   initializeTemperature()
