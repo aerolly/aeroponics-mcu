@@ -1,5 +1,5 @@
-from sensors import temperature, pressure
-from devices import pump, lowerSolenoid, upperSolenoid
+# from sensors import temperature, pressure
+import devices
 
 class Command:
   # Initialize command class
@@ -17,14 +17,24 @@ class Command:
   # Control device
   def handleDevice(self):
     try:
-      getattr(self.options.deviceName, 'run')(self.options.action)
+      # Dynamically call device name
+      name = "devices." + self.options['deviceName']
+      mod = __import__(name, fromlist=[''])
+
+      # Run run() function 
+      mod.run(self.options['action'])
     except AttributeError:
-      return str(AttributeError)
+      print(AttributeError)
 
   # Get data from sensor
   def handleSensor(self):
     try:
-      getattr(self.options.sensorType, 'run')()
+      # Dynamically call sensor name
+      name = "sensors." + self.options['deviceName']
+      mod = __import__(name, fromlist=[''])
+
+      # Run run() function 
+      mod.run()
     except AttributeError:
-      return str(AttributeError)
+      print(AttributeError)
   
