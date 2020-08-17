@@ -22,4 +22,9 @@ switch = json.dumps({
   }
 })
 
-r.publish('scheduler', switch)
+data = json.dumps({
+  'deviceName': 'pump',
+  'result': 1
+})
+
+r.publish('data', data)

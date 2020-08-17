@@ -1,5 +1,6 @@
-import RPi.GPIO as GPIO
+from device import Device
 
-def run(action):
-  GPIO.output(22, action)
-  return action
+class UpperSolenoid(Device):
+  pass
+
+upperSolenoid = UpperSolenoid(22, False)

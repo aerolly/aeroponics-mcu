@@ -9,7 +9,8 @@ import traceback
 
 import settings
 from commands import Command
-from sensors.temperature import initializeTemperature
+from sensors import temperature
+from devices import lowerSolenoid, pump, upperSolenoid
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
@@ -20,17 +21,14 @@ def initializeGPIO():
   # Solid state relay GPIO initializations
   GPIO.setmode(GPIO.BCM)
 
-  pins = [17, 27, 22]
-  for pin in pins:
-    GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW) # off (negative logic)
-
 def initializeHardware():
-  initializeTemperature()
   initializeGPIO()
 
 def deinitializeHardware():
   # Solid state relay GPIO deinitializations
-  GPIO.cleanup([17, 27, 22])
+  del lowerSolenoid
+  del pump
+  del upperSolenoid
 
 # Process the queue of events and run 
 def handleQueue():
