@@ -8,6 +8,9 @@ import sys
 import traceback
 
 import settings
+
+GPIO.setmode(GPIO.BCM)
+
 from commands import Command
 from sensors import temperature
 from controllers import lowerSolenoid, pump, upperSolenoid
@@ -16,13 +19,6 @@ r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db
 p = r.pubsub(ignore_subscribe_messages=True)
 
 scheduleQueue = []
-
-def initializeGPIO():
-  # Solid state relay GPIO initializations
-  GPIO.setmode(GPIO.BCM)
-
-def initializeHardware():
-  initializeGPIO()
 
 def deinitializeHardware():
   # Solid state relay GPIO deinitializations
