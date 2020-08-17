@@ -37,9 +37,9 @@ def handleQueue():
 
         c = Command(command['command'], command['options'])
 
-        c.handleCommand()
+        out = c.handleCommand()
 
-        r.publish('data', json.dumps(c))
+        r.publish('data', json.dumps(out))
       except json.JSONDecodeError as error:
         print(error.msg)
     time.sleep(1)
