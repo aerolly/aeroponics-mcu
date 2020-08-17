@@ -9,8 +9,8 @@ class Command:
 
   # Decide what to do with command
   def handleCommand(self):
-    if (self.command == 'device'):
-      result = self.handleDevice()
+    if (self.command == 'controller'):
+      result = self.handleController()
       return {
         "deviceName": self.options['deviceName'],
         "result": result
@@ -25,10 +25,10 @@ class Command:
       print('Invalid command type provided.')
 
   # Control device
-  def handleDevice(self):
+  def handleController(self):
     try:
       # Dynamically call device name
-      name = "devices." + self.options['deviceName']
+      name = "controllers." + self.options['deviceName']
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
