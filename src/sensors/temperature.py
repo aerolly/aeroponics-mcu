@@ -40,6 +40,7 @@ class Temperature(Sensor):
             temp_f = temp_c * 9.0 / 5.0 + 32.0
             return temp_f
 
+temperature = Temperature()
  
 # print(' rom: '+ read_rom())
 # while True:

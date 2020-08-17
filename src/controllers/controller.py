@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 
-class Device:
+class Controller:
   def __init__(self, pin, negativeLogic):
     print('constructing')
     self.pin = pin

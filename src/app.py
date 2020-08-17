@@ -10,7 +10,7 @@ import traceback
 import settings
 from commands import Command
 from sensors import temperature
-from devices import lowerSolenoid, pump, upperSolenoid
+from controllers import lowerSolenoid, pump, upperSolenoid
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)

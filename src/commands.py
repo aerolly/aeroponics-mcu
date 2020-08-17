@@ -32,7 +32,9 @@ class Command:
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      return mod.run(self.options['action'])
+      attr = getattr(mod, self.options['deviceName'])
+
+      return attr.run(self.options['action'])
     except AttributeError:
       print(AttributeError)
 
@@ -44,7 +46,9 @@ class Command:
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      return mod.run()
+      attr = getattr(mod, self.options['deviceName'])
+
+      return attr.run()
     except AttributeError:
       print(AttributeError)
   
