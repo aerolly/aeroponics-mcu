@@ -63,7 +63,6 @@ def handleRedisSchedule():
 
 if __name__ == "__main__":
   try:
-    initializeHardware()
     queue = threading.Thread(target=handleQueue)
     redisPub = threading.Thread(target=handleRedisSchedule)
 
