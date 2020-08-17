@@ -22,7 +22,7 @@ def initializeGPIO():
 
   pins = [17, 27, 22]
   for pin in pins:
-    GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH) # off (negative logic)
+    GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW) # off (negative logic)
 
 def initializeHardware():
   initializeTemperature()
@@ -44,6 +44,8 @@ def handleQueue():
         c = Command(command['command'], command['options'])
 
         c.handleCommand()
+
+        r.publish('data', json.dumps(c))
       except json.JSONDecodeError as error:
         print(error.msg)
     time.sleep(1)

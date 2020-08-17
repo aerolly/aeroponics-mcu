@@ -23,7 +23,7 @@ def read_temp_raw():
     f.close()
     return lines
  
-def run():
+def run(redis):
     lines = read_temp_raw()
     # Analyze if the last 3 characters are 'YES'.
     while lines[0].strip()[-3:] != 'YES':

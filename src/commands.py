@@ -10,9 +10,17 @@ class Command:
   # Decide what to do with command
   def handleCommand(self):
     if (self.command == 'device'):
-      self.handleDevice()
+      result = self.handleDevice()
+      return {
+        "deviceName": self.options['deviceName'],
+        "result": result
+      }
     elif (self.command == 'sensor'):
-      self.handleSensor()
+      result = self.handleSensor()
+      return {
+        "deviceName": self.options['deviceName'],
+        "result": result 
+      }
     else:
       print('Invalid command type provided.')
 
@@ -24,7 +32,7 @@ class Command:
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      mod.run(self.options['action'])
+      return mod.run(self.options['action'])
     except AttributeError:
       print(AttributeError)
 
@@ -36,8 +44,7 @@ class Command:
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      reading = mod.run()
-      print(reading)
+      return mod.run()
     except AttributeError:
       print(AttributeError)
   
