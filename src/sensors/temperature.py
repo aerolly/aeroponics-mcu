@@ -1,7 +1,7 @@
+from .sensor import Sensor
 import os
 import glob
 import time
-from sensor import Sensor
  
 base_dir = '/sys/bus/w1/devices/'
 
