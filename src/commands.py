@@ -12,13 +12,13 @@ class Command:
     if (self.command == 'controller'):
       result = self.handleController()
       return {
-        "deviceName": self.options['deviceName'],
+        "key": self.options['deviceName'],
         "result": result
       }
     elif (self.command == 'sensor'):
       result = self.handleSensor()
       return {
-        "deviceName": self.options['deviceName'],
+        "key": self.options['deviceName'],
         "result": result 
       }
     else:

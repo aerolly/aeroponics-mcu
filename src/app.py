@@ -12,15 +12,22 @@ import settings
 GPIO.setmode(GPIO.BCM)
 
 from commands import Command
-from sensors import temperature
-from controllers import lowerSolenoid, pump, upperSolenoid
+from sensors.temperature import Temperature
+from controllers.lowerSolenoid import LowerSolenoid
+from controllers.upperSolenoid import UpperSolenoid
+from controllers.pump import Pump
+
+pump = Pump(17, False)
+lowerSolenoid = LowerSolenoid(27, False)
+upperSolenoid = UpperSolenoid(22, False)
+temperature = Temperature()
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
 
 scheduleQueue = []
 
-def deinitializeHardware():
+def deinitializeHardware(lowerSolenoid, pump, upperSolenoid):
   # Solid state relay GPIO deinitializations
   del lowerSolenoid
   del pump
@@ -79,7 +86,7 @@ if __name__ == "__main__":
   except Exception:
     traceback.print_exc(file=sys.stdout)
   finally:
-    deinitializeHardware()
+    deinitializeHardware(lowerSolenoid, pump, upperSolenoid)
     sys.exit(0)
 
 # while True:

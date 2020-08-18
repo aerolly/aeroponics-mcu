@@ -9,7 +9,7 @@ r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db
 test = json.dumps({
   'command': 'sensor',
   'options': {
-    'deviceName': 'temperature',
+    'key': 'temperature',
     'action': 1
   }
 })
@@ -17,14 +17,14 @@ test = json.dumps({
 switch = json.dumps({
   'command': 'device',
   'options': {
-    'deviceName': 'lowerSolenoid',
+    'key': 'lowerSolenoid',
     'action': 0
   }
 })
 
 data = json.dumps({
-  'deviceName': 'pump',
-  'result': 1
+  'key': 'temperature',
+  'result': 72.3
 })
 
 r.publish('data', data)

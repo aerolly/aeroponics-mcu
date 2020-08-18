@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import time
 
 class Controller:
   def __init__(self, pin, negativeLogic):
@@ -11,13 +12,20 @@ class Controller:
     else:
       GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
   
-  def run(self, action):
+  def setOutput(self, action):
     if self.negativeLogic:
       GPIO.output(self.pin, not action)
       return not action
     else:
       GPIO.output(self.pin, action)
       return action
+
+  def run(self, action, duration):
+    self.setOutput(action)
+
+    if duration > 0:
+      time.sleep(duration)
+      self.setOutput(not action)
   
   def __del__(self):
     GPIO.cleanup(self.pin)
