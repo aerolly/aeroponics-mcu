@@ -20,12 +20,9 @@ class Controller:
       GPIO.output(self.pin, action)
       return action
 
-  def run(self, action, duration):
-    self.setOutput(action)
+  def run(self, action):
+    return self.setOutput(action)
 
-    if duration > 0:
-      time.sleep(duration)
-      self.setOutput(not action)
   
   def __del__(self):
     GPIO.cleanup(self.pin)

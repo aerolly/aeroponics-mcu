@@ -34,7 +34,7 @@ class Command:
       # Run run() function 
       attr = getattr(mod, self.options['deviceName'])
 
-      return attr.run(self.options['action'])
+      return attr.run(self.options['action'], self.options['duration'])
     except AttributeError:
       print(AttributeError)
 
