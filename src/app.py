@@ -1,4 +1,4 @@
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import simplejson as json
 import redis
 import os
@@ -9,7 +9,7 @@ import traceback
 import time
 import settings
 
-# GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 
 from commands import Command
 from sensors.temperature import Temperature
@@ -24,7 +24,7 @@ def initializeHardware():
   for controller in controller_methods.controllers:
     controller_methods.init(controller.controller_methods[controller])
 
-def deinitializeHardware(lowerSolenoid, pump, upperSolenoid):
+def deinitializeHardware():
   # Solid state relay GPIO deinitializations
   for controller in controller_methods.controllers:
     controller_methods.deinit(controller.controller_methods[controller])
@@ -65,6 +65,7 @@ def handleRedisSchedule():
     time.sleep(1)
 
 if __name__ == "__main__":
+  initializeHardware()
   try:
     queue = threading.Thread(target=handleQueue)
     redisPub = threading.Thread(target=handleRedisSchedule)
@@ -82,6 +83,7 @@ if __name__ == "__main__":
   except Exception:
     traceback.print_exc(file=sys.stdout)
   finally:
+    deinitializeHardware()
     sys.exit(0)
 
 # while True:
