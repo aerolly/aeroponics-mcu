@@ -1,9 +1,10 @@
 import RPi.GPIO as GPIO
+from simple_rest_client.api import API
+import simplejson as json
 import redis
 import os
 import time
 import threading
-import simplejson as json
 import sys
 import traceback
 
@@ -13,14 +14,31 @@ GPIO.setmode(GPIO.BCM)
 
 from commands import Command
 from sensors.temperature import Temperature
-from controllers.lowerSolenoid import LowerSolenoid
-from controllers.upperSolenoid import UpperSolenoid
-from controllers.pump import Pump
+from controllers import controller
 
-pump = Pump(17, False)
-lowerSolenoid = LowerSolenoid(27, False)
-upperSolenoid = UpperSolenoid(22, False)
-temperature = Temperature()
+api = API(
+  api_root_url=os.getenv('API_IP'), # base api url
+  params={}, # default params
+  headers={}, # default headers
+  timeout=2, # default timeout in seconds
+  append_slash=False, # append slash to final url
+  json_encode_body=True, # encode body as json
+)
+
+api.add_resource(resource_name='controllers')
+
+response = api.controllers.list(body=None, params={}, headers={})
+controllers = []
+
+for controller in response.body:
+
+
+components = {
+  'pump': Pump(17, False),
+  'lowerSolenoid': LowerSolenoid(27, False),
+  'upperSolenoid': UpperSolenoid(22, False),
+  'temperature': Temperature()
+}
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
