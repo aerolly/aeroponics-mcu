@@ -14,6 +14,7 @@ GPIO.setmode(GPIO.BCM)
 from commands import Command
 from sensors.temperature import Temperature
 import controller as controller_methods
+from controller import controllers
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
@@ -21,12 +22,12 @@ p = r.pubsub(ignore_subscribe_messages=True)
 scheduleQueue = []
 
 def initializeHardware():
-  for controller in controller_methods.controllers:
+  for controller in controllers:
     controller_methods.init(controller.controller_methods[controller])
 
 def deinitializeHardware():
   # Solid state relay GPIO deinitializations
-  for controller in controller_methods.controllers:
+  for controller in controllers:
     controller_methods.deinit(controller.controller_methods[controller])
 
 # Process the queue of events and run 
