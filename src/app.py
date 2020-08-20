@@ -43,6 +43,7 @@ def handleQueue():
 
         out = c.handleCommand()
 
+        r.set(out['key'], out['result'])
         r.publish('data', json.dumps(out))
       except json.JSONDecodeError as error:
         print(error.msg)
