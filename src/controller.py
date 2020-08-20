@@ -1,13 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 
-def initController(pin):
+def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
 
-def run(action, pin):
+def run(pin, action):
   GPIO.output(pin, action)
   return action
 
-def deinitController(pin):
+def deinit(pin):
   GPIO.cleanup(pin)
     

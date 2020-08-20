@@ -7,14 +7,14 @@ import time
 import threading
 import sys
 import traceback
-
+import time
 import settings
 
 GPIO.setmode(GPIO.BCM)
 
 from commands import Command
 from sensors.temperature import Temperature
-from controllers import controller
+import controller as controller_methods
 
 api = API(
   api_root_url=os.getenv('API_IP'), # base api url
@@ -25,31 +25,30 @@ api = API(
   json_encode_body=True, # encode body as json
 )
 
-api.add_resource(resource_name='controllers')
+api.add_resource(resource_name='controller')
 
-response = api.controllers.list(body=None, params={}, headers={})
-controllers = []
+response = api.controllers.list()
+controllers = {}
 
 for controller in response.body:
+  print(controller)
+  controllers[controller.ModuleName] = controller.CurrentDeviceGPIO
 
-
-components = {
-  'pump': Pump(17, False),
-  'lowerSolenoid': LowerSolenoid(27, False),
-  'upperSolenoid': UpperSolenoid(22, False),
-  'temperature': Temperature()
-}
+print(controllers)
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
 
 scheduleQueue = []
 
+def initializeHardware():
+  for controller in controllers:
+    controller_methods.init(controllers[controller])
+
 def deinitializeHardware(lowerSolenoid, pump, upperSolenoid):
   # Solid state relay GPIO deinitializations
-  del lowerSolenoid
-  del pump
-  del upperSolenoid
+  for controller in controllers:
+    controller_methods.deinit(controllers[controller])
 
 # Process the queue of events and run 
 def handleQueue():

@@ -1,5 +1,6 @@
 # from sensors import temperature, pressure
 import devices
+from app import controllers
 
 class Command:
   # Initialize command class
@@ -27,14 +28,8 @@ class Command:
   # Control device
   def handleController(self):
     try:
-      # Dynamically call device name
-      name = "controllers." + self.options['deviceName']
-      mod = __import__(name, fromlist=[''])
-
-      # Run run() function 
-      attr = getattr(mod, self.options['deviceName'])
-
-      return attr.run(self.options['action'])
+      print(controllers[self.options['deviceName']], self.options['action'])
+      return controllers.run(controllers[self.options['deviceName']], self.options['action'])
     except AttributeError:
       print(AttributeError)
 
