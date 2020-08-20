@@ -1,5 +1,4 @@
-import RPi.GPIO as GPIO
-from simple_rest_client.api import API
+# import RPi.GPIO as GPIO
 import simplejson as json
 import redis
 import os
@@ -10,31 +9,11 @@ import traceback
 import time
 import settings
 
-GPIO.setmode(GPIO.BCM)
+# GPIO.setmode(GPIO.BCM)
 
 from commands import Command
 from sensors.temperature import Temperature
 import controller as controller_methods
-
-api = API(
-  api_root_url=os.getenv('API_IP'), # base api url
-  params={}, # default params
-  headers={}, # default headers
-  timeout=2, # default timeout in seconds
-  append_slash=False, # append slash to final url
-  json_encode_body=True, # encode body as json
-)
-
-api.add_resource(resource_name='controller')
-
-response = api.controllers.list()
-controllers = {}
-
-for controller in response.body:
-  print(controller)
-  controllers[controller.ModuleName] = controller.CurrentDeviceGPIO
-
-print(controllers)
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
@@ -42,13 +21,13 @@ p = r.pubsub(ignore_subscribe_messages=True)
 scheduleQueue = []
 
 def initializeHardware():
-  for controller in controllers:
-    controller_methods.init(controllers[controller])
+  for controller in controller_methods.controllers:
+    controller_methods.init(controller.controller_methods[controller])
 
 def deinitializeHardware(lowerSolenoid, pump, upperSolenoid):
   # Solid state relay GPIO deinitializations
-  for controller in controllers:
-    controller_methods.deinit(controllers[controller])
+  for controller in controller_methods.controllers:
+    controller_methods.deinit(controller.controller_methods[controller])
 
 # Process the queue of events and run 
 def handleQueue():
@@ -103,7 +82,6 @@ if __name__ == "__main__":
   except Exception:
     traceback.print_exc(file=sys.stdout)
   finally:
-    deinitializeHardware(lowerSolenoid, pump, upperSolenoid)
     sys.exit(0)
 
 # while True:

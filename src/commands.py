@@ -1,5 +1,6 @@
 # from sensors import temperature, pressure
-from app import controllers
+from controller import controllers
+import controller
 
 class Command:
   # Initialize command class
@@ -12,13 +13,13 @@ class Command:
     if (self.command == 'controller'):
       result = self.handleController()
       return {
-        "key": self.options['deviceName'],
+        "key": self.options['key'],
         "result": result
       }
     elif (self.command == 'sensor'):
       result = self.handleSensor()
       return {
-        "key": self.options['deviceName'],
+        "key": self.options['key'],
         "result": result 
       }
     else:
@@ -27,8 +28,7 @@ class Command:
   # Control device
   def handleController(self):
     try:
-      print(controllers[self.options['deviceName']], self.options['action'])
-      return controllers.run(controllers[self.options['deviceName']], self.options['action'])
+      return controller.run(controllers[self.options['key']], self.options['action'])
     except AttributeError:
       print(AttributeError)
 

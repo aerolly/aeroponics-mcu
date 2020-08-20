@@ -15,9 +15,9 @@ test = json.dumps({
 })
 
 switch = json.dumps({
-  'command': 'device',
+  'command': 'controller',
   'options': {
-    'key': 'lowerSolenoid',
+    'key': 'system-pump',
     'action': 0
   }
 })
@@ -27,4 +27,4 @@ data = json.dumps({
   'result': 72.3
 })
 
-r.publish('data', data)
+r.publish('scheduler', switch)
