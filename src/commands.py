@@ -1,5 +1,4 @@
 # from sensors import temperature, pressure
-import devices
 from app import controllers
 
 class Command:
