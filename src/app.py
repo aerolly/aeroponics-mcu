@@ -23,12 +23,12 @@ scheduleQueue = []
 
 def initializeHardware():
   for controller in controllers:
-    controller_methods.init(controller.controller_methods[controller])
+    controller_methods.init(controllers[controller])
 
 def deinitializeHardware():
   # Solid state relay GPIO deinitializations
   for controller in controllers:
-    controller_methods.deinit(controller.controller_methods[controller])
+    controller_methods.deinit(controllers[controller])
 
 # Process the queue of events and run 
 def handleQueue():
