@@ -28,11 +28,10 @@ def init(pin):
 def run(pin, action):
   if action == 1:
     GPIO.output(pin, 0)
-    return 0
   elif action == 0:
     GPIO.output(pin, 1)
-    return 1
 
+  return action
 def deinit(pin):
   GPIO.cleanup(pin)
     
