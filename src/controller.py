@@ -23,11 +23,11 @@ for controller in json.loads(response.body):
   controllers[f'{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
 
 def init(pin):
-  GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
 
 def run(pin, action):
-  GPIO.output(pin, action)
-  return action
+  GPIO.output(pin, not action)
+  return not action
 
 def deinit(pin):
   GPIO.cleanup(pin)
