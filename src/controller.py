@@ -26,8 +26,12 @@ def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
 
 def run(pin, action):
-  GPIO.output(pin, not action)
-  return not action
+  if action == 1:
+    GPIO.output(pin, 0)
+    return 0
+  elif action == 0:
+    GPIO.output(pin, 1)
+    return 1
 
 def deinit(pin):
   GPIO.cleanup(pin)
