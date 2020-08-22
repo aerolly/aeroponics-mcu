@@ -37,7 +37,7 @@ def handleControllerQueue():
   while True:
     if len(controllerQueue) > 0:
       try:
-        command = json.loads(controllerQueue.pop(0))
+        command = controllerQueue.pop(0)
 
         print(f'Processing {command}')
 
@@ -56,7 +56,7 @@ def handleSensorQueue():
   while True:
     if len(sensorQueue) > 0:
       try:
-        command = json.loads(sensorQueue.pop(0))
+        command = sensorQueue.pop(0)
 
         print(f'Processing {command}')
 
