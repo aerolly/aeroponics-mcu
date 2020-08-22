@@ -19,7 +19,8 @@ from controller import controllers
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
 p = r.pubsub(ignore_subscribe_messages=True)
 
-scheduleQueue = []
+controllerQueue = []
+sensorQueue = []
 
 def initializeHardware():
   temperature.init()
@@ -32,11 +33,11 @@ def deinitializeHardware():
     controller_methods.deinit(controllers[controller])
 
 # Process the queue of events and run 
-def handleQueue():
+def handleControllerQueue():
   while True:
-    if len(scheduleQueue) > 0:
+    if len(controllerQueue) > 0:
       try:
-        command = json.loads(scheduleQueue.pop(0))
+        command = json.loads(controllerQueue.pop(0))
 
         print(f'Processing {command}')
 
@@ -50,6 +51,27 @@ def handleQueue():
         print(error.msg)
     time.sleep(1)
 
+# Process the queue of events and run 
+def handleSensorQueue():
+  while True:
+    if len(sensorQueue) > 0:
+      try:
+        command = json.loads(sensorQueue.pop(0))
+
+        print(f'Processing {command}')
+
+        c = Command(command['command'], command['options'])
+
+        out = c.handleCommand()
+
+        r.set(out['key'], out['result'])
+        r.publish('data', json.dumps(out))
+      except json.JSONDecodeError as error:
+        print(error.msg)
+    time.sleep(1)
+
+# Parse array of commands to be executed 
+# Assume that all items in the array are of the same type
 def handleRedisSchedule():
   try:
     p.subscribe('scheduler')
@@ -59,10 +81,16 @@ def handleRedisSchedule():
   while True:
     for message in p.listen():
       try:
-        msg = message['data'].decode('utf-8')
-        scheduleQueue.append(msg)
+        msg = json.loads(message['data'].decode('utf-8'))
 
-        print('Received event.')
+        if (msg['command'] == 'controller'):
+          controllerQueue.append(msg)
+        elif (msg['command'] == 'sensor'):
+          sensorQueue.append(msg)
+
+        print(f'Received event {msg["command"]}')
+      except json.JSONDecodeError as error:
+        print(error.msg) 
       except UnicodeError:
         print('Error decoding Redis message')
     time.sleep(1)
@@ -70,14 +98,17 @@ def handleRedisSchedule():
 if __name__ == "__main__":
   initializeHardware()
   try:
-    queue = threading.Thread(target=handleQueue)
+    controllerQueue = threading.Thread(target=handleControllerQueue)
+    sensorQueue = threading.Thread(target=handleSensorQueue)
     redisPub = threading.Thread(target=handleRedisSchedule)
 
     print('Starting scheduler')
-    queue.start()
+    controllerQueue.start()
+    sensorQueue.start()
     redisPub.start()  
 
-    queue.join()
+    controllerQueue.join()
+    sensorQueue.join()
     redisPub.join()
     print('Stopped scheduler')
   except KeyboardInterrupt:

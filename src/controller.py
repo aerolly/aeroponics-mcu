@@ -5,6 +5,8 @@ import controller as controller_methods
 from simple_rest_client.api import API
 import simplejson as json
 
+import settings
+
 api = API(
   api_root_url=os.getenv('API_IP'), # base api url
   params={}, # default params

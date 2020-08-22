@@ -1,6 +1,7 @@
 import redis
 import os
 import simplejson as json
+import time
 
 import settings
 
@@ -29,9 +30,11 @@ temp = json.dumps({
   }
 })
 
-data = json.dumps({
+s = json.dumps({
   'key': 'temperature',
-  'result': 72.3
+  'result': 12
 })
 
-r.publish('scheduler', temp)
+while True:
+  r.publish('scheduler', temp)
+  time.sleep(10)
