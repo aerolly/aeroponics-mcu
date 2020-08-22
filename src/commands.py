@@ -40,9 +40,7 @@ class Command:
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      attr = getattr(mod, self.options['key'])
-
-      return attr.run()
+      return mod.run()
     except AttributeError:
       print(AttributeError)
   
