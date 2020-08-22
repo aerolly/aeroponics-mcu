@@ -12,7 +12,6 @@ import settings
 GPIO.setmode(GPIO.BCM)
 
 from commands import Command
-from sensors.temperature import Temperature
 import controller as controller_methods
 from controller import controllers
 

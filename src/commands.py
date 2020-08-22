@@ -36,11 +36,11 @@ class Command:
   def handleSensor(self):
     try:
       # Dynamically call sensor name
-      name = "sensors." + self.options['deviceName']
+      name = "sensors." + self.options['key']
       mod = __import__(name, fromlist=[''])
 
       # Run run() function 
-      attr = getattr(mod, self.options['deviceName'])
+      attr = getattr(mod, self.options['key'])
 
       return attr.run()
     except AttributeError:
