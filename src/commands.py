@@ -20,7 +20,7 @@ class Command:
       result = self.handleSensor()
       return {
         "key": self.options['key'],
-        "result": result 
+        "result": result
       }
     else:
       print('Invalid command type provided.')

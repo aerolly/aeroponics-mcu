@@ -13,6 +13,7 @@ GPIO.setmode(GPIO.BCM)
 
 from commands import Command
 import controller as controller_methods
+from sensors import temperature
 from controller import controllers
 
 r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
@@ -21,6 +22,7 @@ p = r.pubsub(ignore_subscribe_messages=True)
 scheduleQueue = []
 
 def initializeHardware():
+  temperature.init()
   for controller in controllers:
     controller_methods.init(controllers[controller])
 

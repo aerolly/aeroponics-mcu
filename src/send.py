@@ -4,7 +4,7 @@ import simplejson as json
 
 import settings
 
-r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
+r = redis.Redis(host=os.getenv('REDIS_IP'), port=os.getenv('REDIS_PORT'), db=0)
 
 test = json.dumps({
   'command': 'sensor',
@@ -22,9 +22,16 @@ switch = json.dumps({
   }
 })
 
+temp = json.dumps({
+  'command': 'sensor',
+  'options': {
+    'key': 'temperature',
+  }
+})
+
 data = json.dumps({
   'key': 'temperature',
   'result': 72.3
 })
 
-r.publish('scheduler', switch)
+r.publish('scheduler', temp)
