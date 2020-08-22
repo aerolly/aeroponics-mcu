@@ -1,5 +1,8 @@
 # from sensors import temperature, pressure
 from controller import controllers
+from sensor import sensors
+from datetime import datetime, timezone
+import time
 import controller
 
 class Command:
@@ -13,12 +16,16 @@ class Command:
     if (self.command == 'controller'):
       result = self.handleController()
       return {
+        "type": self.command,
+        "time": datetime.fromtimestamp(time.time()).replace(tzinfo=timezone.utc).timestamp(),
         "key": self.options['key'],
         "result": result
       }
     elif (self.command == 'sensor'):
       result = self.handleSensor()
       return {
+        "type": self.command,
+        "time": datetime.fromtimestamp(time.time()).replace(tzinfo=timezone.utc).timestamp(),
         "key": self.options['key'],
         "result": result
       }
