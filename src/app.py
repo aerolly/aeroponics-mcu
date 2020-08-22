@@ -98,17 +98,17 @@ def handleRedisSchedule():
 if __name__ == "__main__":
   initializeHardware()
   try:
-    controllerQueue = threading.Thread(target=handleControllerQueue)
-    sensorQueue = threading.Thread(target=handleSensorQueue)
+    controllerThread = threading.Thread(target=handleControllerQueue)
+    sensorThread = threading.Thread(target=handleSensorQueue)
     redisPub = threading.Thread(target=handleRedisSchedule)
 
     print('Starting scheduler')
-    controllerQueue.start()
-    sensorQueue.start()
+    controllerThread.start()
+    sensorThread.start()
     redisPub.start()  
 
-    controllerQueue.join()
-    sensorQueue.join()
+    controllerThread.join()
+    sensorThread.join()
     redisPub.join()
     print('Stopped scheduler')
   except KeyboardInterrupt:
