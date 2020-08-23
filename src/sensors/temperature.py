@@ -1,4 +1,3 @@
-from .sensor import Sensor
 import os
 import glob
 import time
