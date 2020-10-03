@@ -7,9 +7,10 @@ import controller
 
 class Command:
   # Initialize command class
-  def __init__(self, command, options):
+  def __init__(self, command, options, waitTime=0):
     self.command = command
     self.options = options
+    self.waitTime = waitTime
 
   # Decide what to do with command
   def handleCommand(self):
@@ -35,7 +36,10 @@ class Command:
   # Control device
   def handleController(self):
     try:
-      return controller.run(controllers[self.options['key']], self.options['action'])
+      return controller.run(
+        controllers[self.options['key']], 
+        self.options['action'], 
+        self.options['waitTime'] )
     except AttributeError:
       print(AttributeError)
 

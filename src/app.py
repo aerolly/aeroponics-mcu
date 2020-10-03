@@ -41,7 +41,10 @@ def handleControllerQueue():
 
         print(f'Processing {command}')
 
-        c = Command(command['command'], command['options'])
+        if not command.has_key('waitTime'):
+          command['waitTime'] = 0
+
+        c = Command(command['command'], command['options'], command['waitTime'])
 
         out = c.handleCommand()
 

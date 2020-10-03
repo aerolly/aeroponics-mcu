@@ -27,13 +27,22 @@ for controller in json.loads(response.body):
 def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
 
-def run(pin, action):
+def run(pin, action, waitTime=0):
   if action == 1:
     GPIO.output(pin, 0)
   elif action == 0:
     GPIO.output(pin, 1)
 
+  # for automatic scheduling
+  if waitTime != 0:
+    time.sleep(waitTime)
+    # negative logic, so we reverse the passed in action
+    GPIO.output(pin, action)
+    action = not action
+
+
   return action
+
 def deinit(pin):
   GPIO.cleanup(pin)
     
