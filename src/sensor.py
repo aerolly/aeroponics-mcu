@@ -9,5 +9,5 @@ response = requests.get(f'{os.getenv("API_IP")}/sensor', timeout=2)
 
 sensors = []
 
-for sensor in json.loads(response.body):
+for sensor in json.loads(response.text):
   sensors.append(sensor['DeviceTypeName'])
