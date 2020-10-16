@@ -11,7 +11,7 @@ response = requests.get(f'{os.getenv("API_IP")}/controller', timeout=2)
 
 controllers = {}
 
-for controller in json.loads(response.body):
+for controller in json.loads(response.text):
   controllers[f'{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
 
 def init(pin):
