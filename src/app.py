@@ -80,26 +80,26 @@ def handleRedisSchedule():
 
   while True:
     with concurrent.futures.ThreadPoolExecutor() as executor:
-      try:
-        for message in p.listen():
-          try:
-            msg = json.loads(message['data'].decode('utf-8'))
+      for message in p.listen():
+        try:
+          msg = json.loads(message['data'].decode('utf-8'))
 
-            if (msg['command'] == 'controller'):
-              executor.submit(fn=handleController, args=[msg])
-              time.sleep(1)
-            elif (msg['command'] == 'sensor'):
-              executor.submit(fn=handleSensor, args=[msg])
-              time.sleep(1)
+          if (msg['command'] == 'controller'):
+            executor.submit(handleController, msg)
+            time.sleep(1)
+          elif (msg['command'] == 'sensor'):
+            executor.submit(handleSensor, msg)
+            time.sleep(1)
 
-            print(f'Received event {msg["command"]}')
-          except json.JSONDecodeError as error:
-            print(error.msg) 
-          except UnicodeError:
-            print('Error decoding Redis message')
+          print(f'Received event {msg["command"]}')
+        except json.JSONDecodeError as error:
+          print(error.msg) 
+        except UnicodeError:
+          print('Error decoding Redis message')
+        except KeyboardInterrupt:
+          print("Shutdown requested...exiting")
+          return
 
-      except KeyboardInterrupt:
-        print("Shutdown requested...exiting")
 
 
 if __name__ == "__main__":
