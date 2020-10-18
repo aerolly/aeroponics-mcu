@@ -47,6 +47,7 @@ def handleController(command):
     c = Command(command['command'], command['options'], command['waitTime'])
 
     out = c.handleCommand()
+    print(out)
 
     r.set(out['key'], out['result'])
     r.publish('data', json.dumps(out))
@@ -57,13 +58,12 @@ def handleController(command):
 # Process the queue of events and run 
 def handleSensor(command):
   try:
-    command = sensorQueue.pop(0)
-
     print(f'Processing {command}')
 
     c = Command(command['command'], command['options'])
 
     out = c.handleCommand()
+    print(out)
 
     r.set(out['key'], out['result'])
     r.publish('data', json.dumps(out))
