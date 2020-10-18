@@ -35,7 +35,7 @@ class Command:
   # Control device
   def handleController(self):
     try:
-      return controller.run(controllers[self.options['key']], self.options['action'])
+      return controller.run(controllers[self.options['key']] , self.options)
     except AttributeError:
       print(AttributeError)
 
