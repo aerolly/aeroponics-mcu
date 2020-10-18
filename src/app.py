@@ -41,10 +41,7 @@ def handleController(command):
   try:
     print(f'Processing {command}')
 
-    if not command.has_key('waitTime'):
-      command['waitTime'] = 0
-
-    c = Command(command['command'], command['options'], command['waitTime'])
+    c = Command(command['command'], command['options'])
 
     out = c.handleCommand()
     print(out)
@@ -53,6 +50,7 @@ def handleController(command):
     r.publish('data', json.dumps(out))
   except json.JSONDecodeError as error:
     print(error.msg)
+
 
 
 # Process the queue of events and run 
