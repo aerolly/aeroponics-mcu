@@ -27,9 +27,8 @@ for controller in json.loads(response.body):
 def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
 
-def run(options):
+def run(pin, options):
   action = options['action']
-  pin = options['key']
 
   if action == 1:
     GPIO.output(pin, 0)
