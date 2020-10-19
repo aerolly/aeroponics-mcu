@@ -76,8 +76,8 @@ def handleRedisSchedule():
   except:
     print('Could not subscribe')
 
-  while True:
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+  with concurrent.futures.ThreadPoolExecutor() as executor:
+    while True:
       for message in p.listen():
         try:
           msg = json.loads(message['data'].decode('utf-8'))
