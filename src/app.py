@@ -37,24 +37,7 @@ def deinitializeHardware():
 
 
 # Process the queue of events and run 
-def handleController(command):
-  try:
-    print(f'Processing {command}')
-
-    c = Command(command['command'], command['options'])
-
-    out = c.handleCommand()
-    print(out)
-
-    r.set(out['key'], out['result'])
-    r.publish('data', json.dumps(out))
-  except json.JSONDecodeError as error:
-    print(error.msg)
-
-
-
-# Process the queue of events and run 
-def handleSensor(command):
+def handleCommand(command):
   try:
     print(f'Processing {command}')
 
@@ -82,12 +65,8 @@ def handleRedisSchedule():
         try:
           msg = json.loads(message['data'].decode('utf-8'))
 
-          if (msg['command'] == 'controller'):
-            executor.submit(handleController, msg)
-            time.sleep(1)
-          elif (msg['command'] == 'sensor'):
-            executor.submit(handleSensor, msg)
-            time.sleep(1)
+          executor.submit(handleCommand, msg)
+          time.sleep(1)
 
           print(f'Received event {msg["command"]}')
         except json.JSONDecodeError as error:
@@ -97,8 +76,6 @@ def handleRedisSchedule():
         except KeyboardInterrupt:
           print("Shutdown requested...exiting")
           return
-
-
 
 if __name__ == "__main__":
   initializeHardware()
