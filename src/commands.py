@@ -53,7 +53,7 @@ class Command:
       reading = mod.run()
 
       # Get device ID
-      requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, data={'id': sensors[self.options['key']], 'reading': reading})
+      requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, json={'id': sensors[self.options['key']], 'reading': reading})
 
       # Run run() function 
       return reading
