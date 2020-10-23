@@ -47,7 +47,7 @@ class Command:
   def handleSensor(self):
     try:
       # Dynamically call sensor name
-      name = "sensors." + self.options['key']
+      name = "sensors." + self.options['key'].split('-')[2]
       mod = __import__(name, fromlist=[''])
 
       reading = mod.run()
