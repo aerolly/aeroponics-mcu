@@ -12,7 +12,7 @@ response = requests.get(f'{os.getenv("API_IP")}/controller', timeout=2)
 controllers = {}
 
 for controller in json.loads(response.json()):
-  controllers[f'{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
+  controllers[f'{controller["NodeName"]}-{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
 
 def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
@@ -31,7 +31,6 @@ def run(pin, options):
     # negative logic, so we reverse the passed in action
     GPIO.output(pin, action)
     action = not action
-
 
   return action
 

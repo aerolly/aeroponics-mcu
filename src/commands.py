@@ -4,6 +4,10 @@ from sensor import sensors
 from datetime import datetime, timezone
 import time
 import controller
+import requests
+import os
+
+import settings
 
 class Command:
   # Initialize command class
@@ -46,8 +50,13 @@ class Command:
       name = "sensors." + self.options['key']
       mod = __import__(name, fromlist=[''])
 
+      reading = mod.run()
+
+      # Get device ID
+      requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, data={'id': sensors[self.options['key']], 'reading': reading})
+
       # Run run() function 
-      return mod.run()
+      return reading
     except AttributeError:
       print(AttributeError)
   
