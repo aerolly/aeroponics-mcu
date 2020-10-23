@@ -7,8 +7,7 @@ import settings
 
 response = requests.get(f'{os.getenv("API_IP")}/sensor', timeout=2)
 
-sensors = []
+sensors = {}
 
 for sensor in json.loads(response.json()):
-  print(sensor)
-  sensors.append(sensor['DeviceTypeName'])
+  sensors[f'{sensor["NodeName"]}-{sensor["ModuleName"]}-{sensor["DeviceTypeName"]}'] = sensor["CurrentDeviceID"]
