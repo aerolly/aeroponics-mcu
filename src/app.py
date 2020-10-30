@@ -9,6 +9,7 @@ import sys
 import traceback
 import time
 import settings
+import socket
 
 GPIO.setmode(GPIO.BCM)
 
@@ -77,11 +78,44 @@ def handleRedisSchedule():
           print("Shutdown requested...exiting")
           return
 
+def handleBackupSchedule():
+  localIP     = "127.0.0.1"
+  localPort   = 20001
+  bufferSize  = 1024
+
+  # Create a datagram socket
+  UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+  # Bind to address and ip
+  UDPServerSocket.bind((localIP, localPort))
+  
+  # Listen for incoming datagrams
+  while(True):
+    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+
+    message = bytesAddressPair[0]
+    address = bytesAddressPair[1]
+
+    clientMsg = "Message from Client:{}".format(message)
+    clientIP  = "Client IP Address:{}".format(address)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+      msg = json.loads(message.decode('utf-8'))
+      executor.submit(handleCommand, msg)
+      time.sleep(1)
+
+    print(clientMsg)
+    print(clientIP)
+
 if __name__ == "__main__":
   initializeHardware()
   try:
     print('Starting scheduler')
-    handleRedisSchedule()
+    redis = threading.thread(handleRedisSchedule)
+    backup = threading.thread(handleBackupSchedule)
+
+    redis.join()
+    backup.join()
     print('Stopped scheduler')
   except Exception:
     traceback.print_exc(file=sys.stdout)
