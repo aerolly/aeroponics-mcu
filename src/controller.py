@@ -7,15 +7,15 @@ import simplejson as json
 
 import settings
 
-try:
-  response = requests.get(f'{os.getenv("API_IP")}/controller', timeout=2)
-except requests.exceptions.ConnectionError:
-  print('Connection error.')
-
 controllers = {}
 
-for controller in json.loads(response.json()):
-  controllers[f'{controller["NodeName"]}-{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
+try:
+  response = requests.get(f'{os.getenv("API_IP")}/controller', timeout=2)
+
+  for controller in json.loads(response.json()):
+    controllers[f'{controller["NodeName"]}-{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
+except requests.exceptions.ConnectionError:
+  print('Connection error.')
 
 def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
