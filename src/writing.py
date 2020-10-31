@@ -38,7 +38,7 @@ def sprayUpper():
   send_command(json.dumps({
     'command': 'controller',
     'options': {
-      'key': 'genesis-lowerBed-solenoid',
+      'key': 'genesis-upperBed-solenoid',
       'action': 1,
       'waitTime': 10
     }
