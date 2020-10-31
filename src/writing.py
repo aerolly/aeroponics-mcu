@@ -50,7 +50,7 @@ def pump():
     'options': {
       'key': 'genesis-system-pump',
       'action': 1,
-      'waitTime': 10
+      'waitTime': 60
     }
   }))
 
