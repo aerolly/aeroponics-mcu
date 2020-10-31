@@ -113,6 +113,9 @@ if __name__ == "__main__":
     redis = threading.Thread(target=handleRedisSchedule)
     backup = threading.Thread(target=handleBackupSchedule)
 
+    redis.start()
+    backup.start()
+
     redis.join()
     backup.join()
     print('Stopped scheduler')
