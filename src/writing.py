@@ -20,7 +20,7 @@ def send_command(message):
   try:
     # Send data
     if not live:
-      sock.sendto(message, server_address)
+      sock.sendto(bytes(message, 'utf-8'), server_address)
   finally:
     sock.close()
 
@@ -48,9 +48,9 @@ def pump():
   send_command(json.dumps({
     'command': 'controller',
     'options': {
-      'key': 'genesis-lowerBed-solenoid',
+      'key': 'genesis-system-pump',
       'action': 1,
-      'waitTime': 10
+      'waitTime': 60
     }
   }))
 
@@ -160,6 +160,11 @@ def redisConnection():
     time.sleep(5)
 
 if __name__ == "__main__":
-  threading.Thread(sched)
-  threading.Thread()
+  scheduler = threading.Thread(target=sched)
+  redisConnection = threading.Thread(target=redisConnection)
 
+  scheduler.start()
+  redisConnection.start()
+
+  scheduler.join()
+  redisConnection.join()

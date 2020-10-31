@@ -110,8 +110,11 @@ if __name__ == "__main__":
   initializeHardware()
   try:
     print('Starting scheduler')
-    redis = threading.Thread(handleRedisSchedule)
-    backup = threading.Thread(handleBackupSchedule)
+    redis = threading.Thread(target=handleRedisSchedule)
+    backup = threading.Thread(target=handleBackupSchedule)
+
+    redis.start()
+    backup.start()
 
     redis.join()
     backup.join()
