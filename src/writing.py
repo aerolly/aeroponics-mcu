@@ -19,8 +19,8 @@ server_address = ('localhost', 20001)
 def send_command(message):
   try:
     # Send data
-    if not live:
-      sock.sendto(message, server_address)
+    # if not live:
+    sock.sendto(message, server_address)
   finally:
     sock.close()
 
@@ -161,5 +161,5 @@ def redisConnection():
 
 if __name__ == "__main__":
   threading.Thread(sched)
-  threading.Thread()
+  threading.Thread(redisConnection)
 
