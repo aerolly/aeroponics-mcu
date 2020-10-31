@@ -14,8 +14,15 @@ try:
 
   for controller in json.loads(response.json()):
     controllers[f'{controller["NodeName"]}-{controller["ModuleName"]}-{controller["DeviceTypeName"]}'] = controller['CurrentDeviceGPIO']
+
+  f = open('controllers.json', 'w')
+  f.write(json.dumps(controllers))
+  f.close()
 except requests.exceptions.ConnectionError:
   print('Connection error.')
+  f = open('controllers.json', 'r')
+  controllers = json.loads(f.read())
+  f.close()
 
 def init(pin):
   GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH)
