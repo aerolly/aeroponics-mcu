@@ -12,6 +12,8 @@ import settings
 import socket
 
 GPIO.setmode(GPIO.BCM)
+global live
+live = True
 
 from commands import Command
 import controller as controller_methods
@@ -23,7 +25,6 @@ p = r.pubsub(ignore_subscribe_messages=True)
 
 controllerQueue = []
 sensorQueue = []
-
 
 def initializeHardware():
   temperature.init()
@@ -62,26 +63,31 @@ def handleRedisSchedule():
 
   with concurrent.futures.ThreadPoolExecutor() as executor:
     while True:
-      for message in p.listen():
-        try:
-          msg = json.loads(message['data'].decode('utf-8'))
+      try:
+        for message in p.listen():
+          try:
+            msg = json.loads(message['data'].decode('utf-8'))
 
-          executor.submit(handleCommand, msg)
-          time.sleep(1)
+            executor.submit(handleCommand, msg)
+            time.sleep(1)
 
-          print(f'Received event {msg["command"]}')
-        except json.JSONDecodeError as error:
-          print(error.msg) 
-        except UnicodeError:
-          print('Error decoding Redis message')
-        except KeyboardInterrupt:
-          print("Shutdown requested...exiting")
-          return
+            print(f'Received event {msg["command"]}')
+          except json.JSONDecodeError as error:
+            print(error.msg) 
+          except UnicodeError:
+            print('Error decoding Redis message')
+          except KeyboardInterrupt:
+            print("Shutdown requested...exiting")
+            return
+      except redis.exceptions.ConnectionError:
+        live = False
+      except:
+        live = False
 
 def handleBackupSchedule():
-  localIP     = "127.0.0.1"
-  localPort   = 20001
-  bufferSize  = 1024
+  localIP = "127.0.0.1"
+  localPort = 20001
+  bufferSize = 1024
 
   # Create a datagram socket
   UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -104,15 +110,12 @@ def handleBackupSchedule():
       executor.submit(handleCommand, msg)
       time.sleep(1)
 
-    print(clientMsg)
-    print(clientIP)
-
 if __name__ == "__main__":
   initializeHardware()
   try:
     print('Starting scheduler')
-    redis = threading.thread(handleRedisSchedule)
-    backup = threading.thread(handleBackupSchedule)
+    redis = threading.Thread(handleRedisSchedule)
+    backup = threading.Thread(handleBackupSchedule)
 
     redis.join()
     backup.join()
