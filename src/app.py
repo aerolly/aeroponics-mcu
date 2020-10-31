@@ -12,7 +12,6 @@ import settings
 import socket
 
 GPIO.setmode(GPIO.BCM)
-global live
 live = True
 
 from commands import Command
@@ -101,9 +100,6 @@ def handleBackupSchedule():
 
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]
-
-    clientMsg = "Message from Client:{}".format(message)
-    clientIP  = "Client IP Address:{}".format(address)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
       msg = json.loads(message.decode('utf-8'))
