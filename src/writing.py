@@ -48,7 +48,7 @@ def pump():
   send_command(json.dumps({
     'command': 'controller',
     'options': {
-      'key': 'genesis-lowerBed-solenoid',
+      'key': 'genesis-system-pump',
       'action': 1,
       'waitTime': 10
     }
