@@ -5,7 +5,10 @@ import simplejson as json
 
 import settings
 
-response = requests.get(f'{os.getenv("API_IP")}/sensor', timeout=2)
+try:
+  response = requests.get(f'{os.getenv("API_IP")}/sensor', timeout=2)
+except requests.exceptions.ConnectionError:
+  print('Connection error.')
 
 sensors = {}
 
