@@ -17,11 +17,11 @@ live = True
 server_address = ('localhost', 20001)
 
 def send_command(message):
-  #try:
     # Send data
+    print(f'Sending {live}')
     #if not live:
-  sock.sendto(bytes(message, 'utf-8'), server_address)
-  #finally:
+    print(message)
+    sock.sendto(bytes(message, 'utf-8'), server_address)
 
 def sprayLower():
   send_command(json.dumps({
@@ -55,7 +55,7 @@ def pump():
 
 schedule.every().day.at("08:03").do(pump)
 schedule.every().day.at("12:00").do(pump)
-
+'''
 schedule.every().day.at("07:05").do(sprayLower)
 schedule.every().day.at("07:20").do(sprayLower)
 schedule.every().day.at("07:35").do(sprayLower)
@@ -97,7 +97,7 @@ schedule.every().day.at("17:20").do(sprayLower)
 schedule.every().day.at("17:35").do(sprayLower)
 schedule.every().day.at("17:50").do(sprayLower)
 schedule.every().day.at("00:00").do(sprayLower)
-
+'''
 schedule.every().day.at("07:00").do(sprayUpper)
 schedule.every().day.at("07:15").do(sprayUpper)
 schedule.every().day.at("07:30").do(sprayUpper)
@@ -159,6 +159,7 @@ def redisConnection():
     time.sleep(5)
 
 if __name__ == "__main__":
+  print('Starting schedule')
   scheduler = threading.Thread(target=sched)
   redisConnection = threading.Thread(target=redisConnection)
 

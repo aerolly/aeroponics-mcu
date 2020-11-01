@@ -54,4 +54,4 @@ def pump():
     }
   }))
 
-pump()
+sprayUpper()
