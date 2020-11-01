@@ -20,7 +20,7 @@ def send_command(message):
   try:
     # Send data
     # if not live:
-    sock.sendto(message, server_address)
+    sock.sendto(bytes(message, 'utf-8'), server_address)
   finally:
     sock.close()
 
@@ -38,7 +38,7 @@ def sprayUpper():
   send_command(json.dumps({
     'command': 'controller',
     'options': {
-      'key': 'genesis-lowerBed-solenoid',
+      'key': 'genesis-upperBed-solenoid',
       'action': 1,
       'waitTime': 10
     }
@@ -54,4 +54,4 @@ def pump():
     }
   }))
 
-pump()
+sprayUpper()
