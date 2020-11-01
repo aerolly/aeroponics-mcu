@@ -3,7 +3,7 @@ from rpi_ws281x import *
 import argparse
 
 LED_COUNT = 300
-LED_PIN = 18
+LED_PIN = 23
 LED_FREQ_HZ = 800000
 LED_DMA = 10
 LED_BRIGHTNESS = 255 #this is max for PWM
