@@ -17,12 +17,11 @@ live = True
 server_address = ('localhost', 20001)
 
 def send_command(message):
-  try:
+  #try:
     # Send data
-    if not live:
-      sock.sendto(bytes(message, 'utf-8'), server_address)
-  finally:
-    sock.close()
+    #if not live:
+  sock.sendto(bytes(message, 'utf-8'), server_address)
+  #finally:
 
 def sprayLower():
   send_command(json.dumps({
@@ -30,7 +29,7 @@ def sprayLower():
     'options': {
       'key': 'genesis-lowerBed-solenoid',
       'action': 1,
-      'waitTime': 10
+      'waitTime': 5
     }
   }))
 
@@ -40,7 +39,7 @@ def sprayUpper():
     'options': {
       'key': 'genesis-upperBed-solenoid',
       'action': 1,
-      'waitTime': 10
+      'waitTime': 5
     }
   }))
 
