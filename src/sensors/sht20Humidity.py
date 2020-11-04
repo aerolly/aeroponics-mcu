@@ -1,5 +1,5 @@
-from SHT20 import SHT20
+from sht20 import SHT20
 
 def run():
-    sht = SHT20(1)
-    return sht.humidity()
+    sht = SHT20(1, resolution=SHT20.TEMP_RES14bit)
+    return sht.read_humid()
