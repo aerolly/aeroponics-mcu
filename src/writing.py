@@ -49,13 +49,13 @@ def pump():
     'options': {
       'key': 'genesis-system-pump',
       'action': 1,
-      'waitTime': 60
+      'waitTime': 120
     }
   }))
 
 schedule.every().day.at("08:03").do(pump)
 schedule.every().day.at("12:00").do(pump)
-'''
+
 schedule.every().day.at("07:05").do(sprayLower)
 schedule.every().day.at("07:20").do(sprayLower)
 schedule.every().day.at("07:35").do(sprayLower)
@@ -97,6 +97,7 @@ schedule.every().day.at("17:20").do(sprayLower)
 schedule.every().day.at("17:35").do(sprayLower)
 schedule.every().day.at("17:50").do(sprayLower)
 schedule.every().day.at("00:00").do(sprayLower)
+
 '''
 schedule.every().day.at("07:00").do(sprayUpper)
 schedule.every().day.at("07:15").do(sprayUpper)
@@ -143,6 +144,7 @@ schedule.every().day.at("17:15").do(sprayUpper)
 schedule.every().day.at("17:30").do(sprayUpper)
 schedule.every().day.at("17:45").do(sprayUpper)
 schedule.every().day.at("00:05").do(sprayLower)
+'''
 
 def sched():
   while True:
