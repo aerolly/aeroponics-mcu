@@ -61,6 +61,8 @@ def handleCommand(command):
     print('Redis connection timed out')
   except redis.exceptions.ConnectionError:
     print('Could not establish Redis connection')
+  except Exception as e:
+    print(e)
 
 # Parse array of commands to be executed 
 # Assume that all items in the array are of the same type

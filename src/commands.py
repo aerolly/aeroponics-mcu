@@ -38,25 +38,19 @@ class Command:
 
   # Control device
   def handleController(self):
-    try:
-      return controller.run(controllers[self.options['key']] , self.options)
-    except AttributeError:
-      print(AttributeError)
+    return controller.run(controllers[self.options['key']] , self.options)
 
   # Get data from sensor
   def handleSensor(self):
-    try:
-      # Dynamically call sensor name
-      name = "sensors." + self.options['key'].split('-')[2]
-      mod = __import__(name, fromlist=[''])
+    # Dynamically call sensor name
+    name = "sensors." + self.options['key'].split('-')[2]
+    mod = __import__(name, fromlist=[''])
 
-      reading = mod.run()
+    reading = mod.run()
 
-      # Get device ID
-      requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, json={'id': sensors[self.options['key']], 'reading': reading})
+    # Get device ID
+    requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, json={'id': sensors[self.options['key']], 'reading': reading})
 
-      # Run run() function 
-      return reading
-    except AttributeError:
-      print(AttributeError)
+    # Run run() function 
+    return reading
   
