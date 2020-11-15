@@ -152,7 +152,7 @@ schedule.every().day.at("00:05").do(sprayLower)
 
 def sched():
   while True:
-    if live:
+    if not live:
       schedule.run_pending()
     time.sleep(1)
 
