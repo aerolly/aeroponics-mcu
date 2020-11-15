@@ -57,6 +57,8 @@ class Command:
 
       # Run run() function 
       return reading
+    except requests.exceptions.ConnectionError:
+      print('Connection error.')
     except AttributeError:
       print(AttributeError)
   
