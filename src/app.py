@@ -19,7 +19,12 @@ import controller as controller_methods
 from sensors import temperature
 from controller import controllers
 
-r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
+r = redis.Redis(
+  connection_pool=BlockingConnectionPool(timeout=10),
+  host=os.getenv('REDIS_SERVER'),
+  port=os.getenv('REDIS_PORT'), db=0
+  )
+
 p = r.pubsub(ignore_subscribe_messages=True)
 
 controllerQueue = []
@@ -47,8 +52,11 @@ def handleCommand(command):
     out = c.handleCommand()
     print(out)
 
-    r.set(out['key'], out['result'])
-    r.publish('data', json.dumps(out))
+    rc = r.make_connection()
+    rc.set(out['key'], out['result'])
+    rc.publish('data', json.dumps(out))
+    r.release(rc)
+
   except json.JSONDecodeError as error:
     print(error.msg)
 
