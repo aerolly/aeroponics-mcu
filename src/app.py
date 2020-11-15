@@ -57,6 +57,10 @@ def handleCommand(command):
     r.publish('data', json.dumps(out))
   except json.JSONDecodeError as error:
     print(error.msg)
+  except redis.exceptions.TimeoutError:
+    print('Redis connection timed out')
+  except redis.exceptions.ConnectionError:
+    print('Could not establish Redis connection')
 
 # Parse array of commands to be executed 
 # Assume that all items in the array are of the same type
