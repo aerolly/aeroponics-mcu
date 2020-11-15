@@ -19,7 +19,13 @@ import controller as controller_methods
 from sensors import temperature
 from controller import controllers
 
-r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
+r = redis.Redis(
+  host=os.getenv('REDIS_SERVER'), 
+  port=os.getenv('REDIS_PORT'), 
+  db=0,
+  socket_timeout=5
+  )
+
 p = r.pubsub(ignore_subscribe_messages=True)
 
 controllerQueue = []
@@ -79,6 +85,9 @@ def handleRedisSchedule():
             print("Shutdown requested...exiting")
             return
       except redis.exceptions.ConnectionError:
+        live = False
+      except redis.exceptions.TimeoutError:
+        print('Redis connection timed out')
         live = False
       except:
         live = False
