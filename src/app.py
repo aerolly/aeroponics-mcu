@@ -23,7 +23,7 @@ r = redis.Redis(
   host=os.getenv('REDIS_SERVER'), 
   port=os.getenv('REDIS_PORT'), 
   db=0,
-  socket_timeout=5
+  socket_connect_timeout=30
   )
 
 p = r.pubsub(ignore_subscribe_messages=True)
