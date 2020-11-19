@@ -50,7 +50,9 @@ class Command:
       name = "sensors." + self.options['key'].split('-')[2]
       mod = __import__(name, fromlist=[''])
 
-      reading = mod.run()
+      param = self.options.get("opt", default=None)
+
+      reading = mod.run(param)
 
       # Get device ID
       requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, json={'id': sensors[self.options['key']], 'reading': reading})
