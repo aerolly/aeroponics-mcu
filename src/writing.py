@@ -10,7 +10,7 @@ import settings
 
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
+r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0, socket_connect_timeout=3)
 
 live = True
 
@@ -152,7 +152,8 @@ schedule.every().day.at("00:05").do(sprayLower)
 
 def sched():
   while True:
-    schedule.run_pending()
+    if not live:
+      schedule.run_pending()
     time.sleep(1)
 
 def redisConnection():
