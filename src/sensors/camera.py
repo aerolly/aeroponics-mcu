@@ -20,4 +20,4 @@ def run(param):
     os.system(takePic)
     os.system(f'scp {localDestPath} {destUser}@{destIP}:{remoteDestPath}')
 
-    return f'{remoteDestPath}/{imageName}'
+    return f'{remoteDestPath}{imageName}'
