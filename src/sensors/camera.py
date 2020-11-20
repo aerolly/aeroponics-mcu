@@ -18,5 +18,6 @@ def run(param):
     takePic = f'fswebcam -d {cameraPath} -r 1280x720 --no-banner {localDestPath}'
 
     os.system(takePic)
-
     os.system(f'scp {localDestPath} {destUser}@{destIP}:{remoteDestPath}')
+
+    return f'{remoteDestPath}/{imageName}'

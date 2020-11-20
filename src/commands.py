@@ -50,7 +50,7 @@ class Command:
       name = "sensors." + self.options['key'].split('-')[2]
       mod = __import__(name, fromlist=[''])
 
-      param = self.options.get("opt", default=None)
+      param = self.options.get("opt")
 
       reading = mod.run(param)
 
