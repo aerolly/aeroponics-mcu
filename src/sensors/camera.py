@@ -9,7 +9,8 @@ def run(param):
     currentDateTime = datetime.datetime.now().strftime("%Y-%m-%d_%H%M")
 
     destUser = os.getenv('SERVER_USER')
-    imageName = f'{param}_{currentDateTime}.png'
+    destIP = os.getenv('REDIS_SERVER')
+    imageName = f'{param}_{currentDateTime}.jpg'
     localDestPath = f'/home/{destUser}/aeroponics-mcu/src/sensors/images/{imageName}'
     remoteDestPath = f'/home/{destUser}/images/'
     cameraPath = f'/dev/{param}'
@@ -18,4 +19,4 @@ def run(param):
 
     os.system(takePic)
 
-    os.system(f'scp {localDestPath} {destUser}@{remoteDestPath}')
+    os.system(f'scp {localDestPath} {destUser}@{destIP}:{remoteDestPath}')

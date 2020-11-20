@@ -1,17 +1,21 @@
-import os
-import datetime
-import sys
-import time
-import subprocess
+from dotenv import load_dotenv
+import camera as c
 
-# read the absolute path
-script_dir = os.path.dirname(__file__)
-# call the .sh to capture the image
-os.system('./camera.sh')
-#get the date and time, set the date and time as a filename.
-currentdate = datetime.datetime.now().strftime("%Y-%m-%d_%H%M")
-# create the real path
-rel_path = currentdate +".jpg"
-#  join the absolute path and created file name
-abs_file_path = os.path.join(script_dir, rel_path)
-print abs_file_path
+load_dotenv()
+
+try:
+     c.run('video1')
+except:
+    pass
+try:
+     c.run('video2')
+except:
+    pass
+try:
+     c.run('video3')
+except:
+    pass
+try:
+     c.run('video4')
+except:
+    pass
