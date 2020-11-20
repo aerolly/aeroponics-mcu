@@ -142,3 +142,4 @@ sensors.json
 
 # Data
 src/sensors/camera/images/*
+src/sensors/camera/camera.sh
