@@ -23,7 +23,7 @@ def read_temp_raw():
     f.close()
     return lines
 
-def run(param=None):
+def run():
     lines = read_temp_raw()
     # Analyze if the last 3 characters are 'YES'.
     while lines[0].strip()[-3:] != 'YES':
@@ -36,9 +36,5 @@ def run(param=None):
         temp_string = lines[1][equals_pos+2:]
         temp_c = float(temp_string) / 1000.0
         temp_f = temp_c * 9.0 / 5.0 + 32.0
-        return temp_f
+        print(temp_f)
  
-# print(' rom: '+ read_rom())
-# while True:
-#     print(' C=%3.3f  F=%3.3f'% read_temp())
-# time.sleep(1)

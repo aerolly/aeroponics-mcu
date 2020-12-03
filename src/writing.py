@@ -19,9 +19,9 @@ server_address = ('localhost', 20001)
 def send_command(message):
     # Send data
     print(f'Sending {live}')
-    #if not live:
-    print(message)
-    sock.sendto(bytes(message, 'utf-8'), server_address)
+    if not live:
+      print(message)
+      sock.sendto(bytes(message, 'utf-8'), server_address)
 
 def sprayLower():
   send_command(json.dumps({
