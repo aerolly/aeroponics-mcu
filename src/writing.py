@@ -10,7 +10,7 @@ import settings
 
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
+r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0, socket_connect_timeout=3)
 
 live = True
 
@@ -19,9 +19,9 @@ server_address = ('localhost', 20001)
 def send_command(message):
     # Send data
     print(f'Sending {live}')
-    #if not live:
-    print(message)
-    sock.sendto(bytes(message, 'utf-8'), server_address)
+    if not live:
+      print(message)
+      sock.sendto(bytes(message, 'utf-8'), server_address)
 
 def sprayLower():
   send_command(json.dumps({
@@ -49,17 +49,21 @@ def pump():
     'options': {
       'key': 'genesis-system-pump',
       'action': 1,
-      'waitTime': 60
+      'waitTime': 120
     }
   }))
 
 schedule.every().day.at("08:03").do(pump)
 schedule.every().day.at("12:00").do(pump)
-'''
+
 schedule.every().day.at("07:05").do(sprayLower)
 schedule.every().day.at("07:20").do(sprayLower)
 schedule.every().day.at("07:35").do(sprayLower)
 schedule.every().day.at("07:50").do(sprayLower)
+schedule.every().day.at("08:05").do(sprayLower)
+schedule.every().day.at("08:20").do(sprayLower)
+schedule.every().day.at("08:35").do(sprayLower)
+schedule.every().day.at("08:50").do(sprayLower)
 schedule.every().day.at("09:05").do(sprayLower)
 schedule.every().day.at("09:20").do(sprayLower)
 schedule.every().day.at("09:35").do(sprayLower)
@@ -97,6 +101,7 @@ schedule.every().day.at("17:20").do(sprayLower)
 schedule.every().day.at("17:35").do(sprayLower)
 schedule.every().day.at("17:50").do(sprayLower)
 schedule.every().day.at("00:00").do(sprayLower)
+
 '''
 schedule.every().day.at("07:00").do(sprayUpper)
 schedule.every().day.at("07:15").do(sprayUpper)
@@ -143,10 +148,12 @@ schedule.every().day.at("17:15").do(sprayUpper)
 schedule.every().day.at("17:30").do(sprayUpper)
 schedule.every().day.at("17:45").do(sprayUpper)
 schedule.every().day.at("00:05").do(sprayLower)
+'''
 
 def sched():
   while True:
-    schedule.run_pending()
+    if not live:
+      schedule.run_pending()
     time.sleep(1)
 
 def redisConnection():

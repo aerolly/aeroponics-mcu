@@ -25,7 +25,13 @@ import controller as controller_methods
 from sensors import temperature
 from controller import controllers
 
-r = redis.Redis(host=os.getenv('REDIS_SERVER'), port=os.getenv('REDIS_PORT'), db=0)
+r = redis.Redis(
+  host=os.getenv('REDIS_SERVER'), 
+  port=os.getenv('REDIS_PORT'), 
+  db=0,
+  socket_connect_timeout=30
+  )
+
 p = r.pubsub(ignore_subscribe_messages=True)
 
 controllerQueue = []
@@ -75,6 +81,12 @@ def handleCommand(command):
     r.publish('data', json.dumps(out))
   except json.JSONDecodeError as error:
     print(error.msg)
+  except redis.exceptions.TimeoutError:
+    print('Redis connection timed out')
+  except redis.exceptions.ConnectionError:
+    print('Could not establish Redis connection')
+  except Exception as e:
+    print(e)
 
 def handleRedisSchedule():
   """Parse command packet, create thread to process command.
@@ -103,6 +115,9 @@ def handleRedisSchedule():
             print("Shutdown requested...exiting")
             return
       except redis.exceptions.ConnectionError:
+        live = False
+      except redis.exceptions.TimeoutError:
+        print('Redis connection timed out')
         live = False
       except:
         live = False
