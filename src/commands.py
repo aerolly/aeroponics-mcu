@@ -12,11 +12,19 @@ import settings
 class Command:
   # Initialize command class
   def __init__(self, command, options):
+    # Command data (id, type)
     self.command = command
+
+    # Options for the command
     self.options = options
 
   # Decide what to do with command
   def handleCommand(self):
+    """Offload the appropriate processing function based on command type (controller or sensor).
+
+    Returns:
+    Packet containing type of command, device ID, time, and result of the command.
+    """
     if (self.command == 'controller'):
       result = self.handleController()
       return {
@@ -36,22 +44,37 @@ class Command:
     else:
       print('Invalid command type provided.')
 
-  # Control device
   def handleController(self):
-    return controller.run(controllers[self.options['key']] , self.options)
+    """Change the state of a controller.
 
-  # Get data from sensor
+    Returns:
+    The controller state that it was changed to become.
+    """
+    try:
+      # Run the controller run function to modify the GPIO pin logic
+      return controller.run(controllers[self.options['key']] , self.options)
+    except AttributeError:
+      print(AttributeError)
+
   def handleSensor(self):
-    # Dynamically call sensor name
-    name = "sensors." + self.options['key'].split('-')[2]
-    mod = __import__(name, fromlist=[''])
-    
-    param = self.options.get("opt")
-    reading = mod.run(param)
+    """Sample a sensor and retrieve the value.
 
-    # Get device ID
-    requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, json={'id': sensors[self.options['key']], 'reading': reading})
+    Returns:
+    The sampled sensor data point.
+    """
+    try:
+      # Dynamically call sensor by type from the unique ID
+      name = "sensors." + self.options['key'].split('-')[2]
 
-    # Run run() function 
-    return reading
+      # Get the run function from the corresponding sensor definition in sensors/
+      mod = __import__(name, fromlist=[''])
+      reading = mod.run()
+
+      # Send sensor result and send it to the API to save to the database
+      requests.post(f'{os.getenv("API_IP")}/sensor', timeout=2, json={'id': sensors[self.options['key']], 'reading': reading})
+
+      # Run run() function (result of the sensor reading)
+      return reading
+    except AttributeError:
+      print(AttributeError)
   

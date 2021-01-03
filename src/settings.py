@@ -1,4 +1,8 @@
 from dotenv import load_dotenv
+
+"""Load environment variables.
+"""
+
 load_dotenv()
 
 # OR, the same with increased verbosity
