@@ -4,7 +4,6 @@ import sys
 import time
 import subprocess
 
-
 def run(param):
     currentDateTime = datetime.datetime.now().strftime("%Y-%m-%d_%H%M")
 
