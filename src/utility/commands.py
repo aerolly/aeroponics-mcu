@@ -7,8 +7,6 @@ import controller
 import requests
 import os
 
-import settings
-
 class Command:
   # Initialize command class
   def __init__(self, command, options):
