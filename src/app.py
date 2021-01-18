@@ -122,8 +122,8 @@ def handleRedisSchedule():
       except:
         live = False
 
-def handleBackupSchedule():
-  """Backup schedule using UDP. Listens to backup process writing.py if redis disconnects.
+def handleInternalSchedule():
+  """Internal commands use UDP. Listen for commands coming from pi (e.g. auto scheduler)
   """
   localIP = "127.0.0.1"
   localPort = 20001
@@ -152,13 +152,13 @@ if __name__ == "__main__":
   try:
     print('Starting scheduler')
     redis = threading.Thread(target=handleRedisSchedule)
-    backup = threading.Thread(target=handleBackupSchedule)
+    internal = threading.Thread(target=handleInternalSchedule)
 
     redis.start()
-    backup.start()
+    internal.start()
 
     redis.join()
-    backup.join()
+    internal.join()
     print('Stopped scheduler')
   except Exception:
     traceback.print_exc(file=sys.stdout)
