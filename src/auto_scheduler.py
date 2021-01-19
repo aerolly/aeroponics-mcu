@@ -69,9 +69,10 @@ def handleSchedulerJob(job):
   # Time based activation
   if job['SchedulerActivateOnMinValue'] is None:
     minuteWait = job['SchedulerMinutesBetweenActivation']
-    print(f'scheduling every {minuteWait} minutes')
-    print(f'job: \n{job}')
+    print(f'scheduling every {minuteWait} minutes\n')
+    print(f'job: \n{job}\n')
 
+    schedule.every().day.at(datetime.now().strftime('%H:%M:%S')).do(send_command, job=job).tag(job['ScheduleID'])
     schedule.every(minuteWait).minutes.do(send_command, job=job).tag(job['ScheduleID'])
     # Remove scheduled jobs after job expires
     while refreshInd != 1 and endTime > datetime.now().time():
